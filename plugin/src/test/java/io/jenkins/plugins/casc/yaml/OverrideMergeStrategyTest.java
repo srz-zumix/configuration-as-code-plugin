@@ -98,8 +98,8 @@ public class OverrideMergeStrategyTest {
 
     @Test
     public void multipleKeys() throws ConfiguratorException {
-        String multipleKeysA = getClass().getResource("multiple-keys-a.yml.yml").toExternalForm();
-        String multipleKeysB = getClass().getResource("multiple-keys-b.yml.yml").toExternalForm();
+        String multipleKeysA = getClass().getResource("multiple-keys-a.yml").toExternalForm();
+        String multipleKeysB = getClass().getResource("multiple-keys-b.yml").toExternalForm();
 
         CasCGlobalConfig descriptor = (CasCGlobalConfig) j.jenkins.getDescriptor(CasCGlobalConfig.class);
         assertNotNull(descriptor);
