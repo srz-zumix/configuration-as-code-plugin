@@ -17,9 +17,17 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
  */
 @Extension
 public class OverrideMergeStrategy implements MergeStrategy {
-    private static final Logger LOGGER = Logger.getLogger(OverrideMergeStrategy.class.getName());
+    private Logger LOGGER = Logger.getLogger(OverrideMergeStrategy.class.getName());
 
-    @Override
+    public OverrideMergeStrategy() {
+        this.LOGGER = Logger.getLogger(OverrideMergeStrategy.class.getName());
+     }
+   
+     public OverrideMergeStrategy(Logger logger) {
+        this.LOGGER = logger;
+     }
+   
+     @Override
     public void merge(Node root, Node node, String source) throws ConfiguratorException {
         if (root.getNodeId() != node.getNodeId()) {
             // means one of those yaml file doesn't conform to JCasC schema
