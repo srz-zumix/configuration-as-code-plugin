@@ -3,6 +3,8 @@ package io.jenkins.plugins.casc.yaml;
 import hudson.Extension;
 import io.jenkins.plugins.casc.ConfiguratorConflictException;
 import io.jenkins.plugins.casc.ConfiguratorException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeId;
@@ -15,8 +17,17 @@ import org.yaml.snakeyaml.nodes.SequenceNode;
  */
 @Extension
 public class OverrideMergeStrategy implements MergeStrategy {
+    private Logger LOGGER = Logger.getLogger(OverrideMergeStrategy.class.getName());
 
-    @Override
+    public OverrideMergeStrategy() {
+        this.LOGGER = Logger.getLogger(OverrideMergeStrategy.class.getName());
+     }
+   
+     public OverrideMergeStrategy(Logger logger) {
+        this.LOGGER = logger;
+     }
+   
+     @Override
     public void merge(Node root, Node node, String source) throws ConfiguratorException {
         if (root.getNodeId() != node.getNodeId()) {
             // means one of those yaml file doesn't conform to JCasC schema
@@ -42,12 +53,15 @@ public class OverrideMergeStrategy implements MergeStrategy {
                         final Node key = tuple.getKeyNode();
                         final Node key2 = t2.getKeyNode();
                         if (key.getNodeId() == NodeId.scalar) {
+                            LOGGER.log(Level.WARNING, "key: ", ((ScalarNode) key).getValue());
+                            LOGGER.log(Level.WARNING, "key2: ", ((ScalarNode) key2).getValue());
                             // We dont support merge for more complex cases (yet)
                             if (((ScalarNode) key).getValue()
                                 .equals(((ScalarNode) key2).getValue())) {
                                 try {
                                     merge(tuple.getValueNode(), t2.getValueNode(), source);
                                 } catch (ConfiguratorConflictException e) {
+                                    LOGGER.log(Level.WARNING, "ConfiguratorConflictException: i=", i);
                                     map.getValue().set(i, t2);
                                 }
                                 map2.getValue().remove(i);

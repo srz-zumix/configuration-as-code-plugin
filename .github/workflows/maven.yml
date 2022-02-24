@@ -29,7 +29,7 @@ jobs:
         cache: 'maven'
 
     - name: Build with Maven
-      run: mvn -Pjacoco clean verify -B -V --no-transfer-progress ${{ matrix.flags }}
+      run: mvn -Pjacoco clean verify -X -B -V --no-transfer-progress ${{ matrix.flags }}
 
     - name: Codecov coverage
       uses: codecov/codecov-action@v2
